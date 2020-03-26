@@ -8,16 +8,16 @@ const MAX_BUILDER = 2;
 
 function autoSpawn() {
     let harvesterCreepsNumber = _.filter(Game.creeps, (creep) => creep.memory.role === "harvester").length;
-    let upgraderCreepsNumber = _.filter(Game.creeps, (creep) => creep.memory.role === "harvester").length;
-    let builderCreepsNumber = _.filter(Game.creeps, (creep) => creep.memory.role === "harvester").length;
+    let upgraderCreepsNumber = _.filter(Game.creeps, (creep) => creep.memory.role === "upgrader").length;
+    let builderCreepsNumber = _.filter(Game.creeps, (creep) => creep.memory.role === "builder").length;
     if (harvesterCreepsNumber < MAX_HARVESTER) {
        Game.spawns["Spawn1"].spawnCreep([WORK, CARRY, MOVE], "harvester_" + Game.time, {memory: {role: "harvester"}}); 
     }
     if (upgraderCreepsNumber < MAX_UPGRADER) {
-       Game.spawns["Spawn1"].spawnCreep([WORK, CARRY, MOVE], "harvester_" + Game.time, {memory: {role: "upgrader"}}); 
+       Game.spawns["Spawn1"].spawnCreep([WORK, CARRY, MOVE], "upgrader_" + Game.time, {memory: {role: "upgrader"}}); 
     }
     if (builderCreepsNumber < MAX_BUILDER) {
-       Game.spawns["Spawn1"].spawnCreep([WORK, CARRY, MOVE], "harvester_" + Game.time, {memory: {role: "builder"}}); 
+       Game.spawns["Spawn1"].spawnCreep([WORK, CARRY, MOVE], "builder_" + Game.time, {memory: {role: "builder"}}); 
     }
 }
 
