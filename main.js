@@ -4,11 +4,11 @@ var roleBuilder = require('role.builder');
 
 const MAX_EXTENSIONS = 5;
 
-const MAX_HARVESTER = 3;
-const MAX_UPGRADER = 3;
+const MAX_HARVESTER = 2;
+const MAX_UPGRADER = 2;
 const MAX_BUILDER = 2;
 
-const MAX_CREEP_LEVEL = 5;
+const MAX_CREEP_MULTIPLY = 5;
 
 function showSpawnMessage(text) {
     Game.spawns["Spawn1"].room.visual.text(text, Game.spawns["Spawn1"].pos.x, Game.spawns["Spawn1"].pos.y - 2, {size:'0.5', align: 'left', opacity: 0.8, 'backgroundColor': '#A3E4D7', color:'black'});
@@ -17,7 +17,7 @@ function showSpawnMessage(text) {
 function getMaxAvailableCreep() {
     let lastWorkingConfig = [];
     
-    for(let i = 0; i < MAX_CREEP_LEVEL; i++) {
+    for(let i = 0; i < MAX_CREEP_MULTIPLY; i++) {
         // dryrun spawnCreep and take highest possible
         let tryConfig = lastWorkingConfig.slice(0);
         tryConfig.push(WORK);
