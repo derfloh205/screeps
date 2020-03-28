@@ -4,9 +4,9 @@ var roleBuilder = require('role.builder');
 
 const MAX_EXTENSIONS = 5;
 
-const MAX_HARVESTER = 2;
-const MAX_UPGRADER = 2;
-const MAX_BUILDER = 2;
+const MAX_HARVESTER = 3;
+const MAX_UPGRADER = 3;
+const MAX_BUILDER = 3;
 
 const MAX_CREEP_MULTIPLY = 5;
 
