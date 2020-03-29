@@ -16,14 +16,17 @@ let basic_creep_moves = {
     },
     buildOldestStructure: function(creep) {
         // prefer towers and walls
-        var towerSites = _.filter(creep.room.find(FIND_MY_CONSTRUCTION_SITES), (site) => site.type === STRUCTURE_TOWER);
-        var wallSites = _.filter(creep.room.find(FIND_MY_CONSTRUCTION_SITES), (site) => site.type === STRUCTURE_WALL);
+        var towerSites = _.filter(creep.room.find(FIND_MY_CONSTRUCTION_SITES), (site) => site.structureType === STRUCTURE_TOWER);
+        var wallSites = _.filter(creep.room.find(FIND_MY_CONSTRUCTION_SITES), (site) => site.structureType === STRUCTURE_WALL);
         var otherSites = creep.room.find(FIND_MY_CONSTRUCTION_SITES);
-        for(let sites of [towerSites, wallSites, otherSites]) { // the buildPriority
-            console.log("checkingSite: " + sites.length);
+        let buildPriority = [towerSites, wallSites, otherSites];
+        //console.log("towersites: " + towerSites.length);
+        for(let index in buildPriority) { // the buildPriority
+            let sites = buildPriority[index];
+            //console.log("checkingSite: " + sites.length);
             if(sites.length) {
                 if(creep.build(sites[0]) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(sites[0], {visualizePathStyle: {stroke: '#ffffff'}});
+                    creep.moveTo(sites[0], {visualizePathStyle: {stroke: '#ffffff'}, maxRooms: 1});
                 }
             }
             break;

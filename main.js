@@ -40,7 +40,9 @@ function getMaxAvailableCreep(spawn) {
         lastWorkingConfig = tryConfig.slice(0);
     }
     //console.log("body parts: " + lastWorkingConfig.length);
-    showSpawnMessage("🛠️ spawning creep with " + lastWorkingConfig.length + " body parts 🛠️");
+    if(lastWorkingConfig.length > 0) {
+        showSpawnMessage("🛠️ spawning creep with " + lastWorkingConfig.length + " body parts 🛠️");
+    }
     return lastWorkingConfig;
 }
 
