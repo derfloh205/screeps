@@ -15,12 +15,19 @@ let basic_creep_moves = {
             }
     },
     buildOldestStructure: function(creep) {
-        var targets = creep.room.find(FIND_MY_CONSTRUCTION_SITES);
-            if(targets.length) {
-                if(creep.build(targets[0]) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
+        // prefer towers and walls
+        var towerSites = _.filter(creep.room.find(FIND_MY_CONSTRUCTION_SITES), (site) => site.type === STRUCTURE_TOWER);
+        var wallSites = _.filter(creep.room.find(FIND_MY_CONSTRUCTION_SITES), (site) => site.type === STRUCTURE_WALL);
+        var otherSites = creep.room.find(FIND_MY_CONSTRUCTION_SITES);
+        for(let sites of [towerSites, wallSites, otherSites]) { // the buildPriority
+            console.log("checkingSite: " + sites.length);
+            if(sites.length) {
+                if(creep.build(sites[0]) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(sites[0], {visualizePathStyle: {stroke: '#ffffff'}});
                 }
             }
+            break;
+        }
     }
 };
 
