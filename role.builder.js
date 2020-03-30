@@ -4,8 +4,9 @@ var roleBuilder = {
 
     /** @param {Creep} creep **/
     run: function(creep) {
+        let numConstructions = creep.room.find(FIND_MY_CONSTRUCTION_SITES).length;
 
-	    if(creep.memory.building && creep.store[RESOURCE_ENERGY] == 0) {
+	    if(creep.memory.building && (creep.store[RESOURCE_ENERGY] == 0 || numConstructions === 0)) {
             creep.memory.building = false;
             creep.say('🔄 harvest');
 	    }

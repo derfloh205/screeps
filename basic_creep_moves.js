@@ -28,8 +28,27 @@ let basic_creep_moves = {
                 if(creep.build(sites[0]) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(sites[0], {visualizePathStyle: {stroke: '#ffffff'}, maxRooms: 1});
                 }
+                break;
             }
-            break;
+            
+        }
+    },
+    transferEnergyToStructure: function(creep) {
+        var towers = _.filter(creep.room.find(FIND_MY_STRUCTURES), (structure) => structure.structureType === STRUCTURE_TOWER && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0);
+        var extensions = _.filter(creep.room.find(FIND_MY_STRUCTURES), (structure) => structure.structureType === STRUCTURE_EXTENSION && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0);
+        var spawns = _.filter(creep.room.find(FIND_MY_STRUCTURES), (structure) => structure.structureType === STRUCTURE_SPAWN && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0);
+        let tranferPriority = [spawns, towers, extensions];
+        //console.log("towers: " + towers.length);
+        for(let index in tranferPriority) { // the buildPriority
+            let buildings = tranferPriority[index];
+            //console.log("checkingBuildings: " + buildings.length);
+            if(buildings.length) {
+                if(creep.transfer(buildings[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(buildings[0], {visualizePathStyle: {stroke: '#ffffff'}, maxRooms: 1});
+                }
+                break;
+            }
+            
         }
     }
 };

@@ -25,12 +25,17 @@ function showSpawnMessage(text) {
 function getMaxAvailableCreep(spawn) {
     let lastWorkingConfig = [];
     
-    for(let i = 0; i < MAX_CREEP_MULTIPLY; i++) {
+    for(let numBodyparts = 0; numBodyparts < MAX_CREEP_MULTIPLY; numBodyparts++) {
         // dryrun spawnCreep and take highest possible
         let tryConfig = lastWorkingConfig.slice(0);
+        // try bigger config
         tryConfig.push(WORK);
-        tryConfig.push(CARRY);
-        tryConfig.push(MOVE);
+        if(numBodyparts % 5 === 0) {
+            tryConfig.push(CARRY);
+        }
+        if(numBodyparts % 5 === 0) {
+            tryConfig.push(MOVE);
+        }
         
         if (Game.spawns["Spawn1"].spawnCreep(tryConfig, "dummy", {dryRun: true}) !== OK) {
             //console.log("not enough energy for " + tryConfig.length + " bodyparts");
@@ -50,14 +55,27 @@ function autoSpawnCreeps(spawn) {
     let harvesterCreepsNumber = _.filter(Game.creeps, (creep) => creep.memory.role === "harvester").length;
     let upgraderCreepsNumber = _.filter(Game.creeps, (creep) => creep.memory.role === "upgrader").length;
     let builderCreepsNumber = _.filter(Game.creeps, (creep) => creep.memory.role === "builder").length;
-    if (harvesterCreepsNumber < MAX_HARVESTER) {
-       spawn.spawnCreep(getMaxAvailableCreep(spawn), "harvester_" + Game.time, {memory: {role: "harvester"}}); 
-    }
-    if (upgraderCreepsNumber < MAX_UPGRADER) {
-       spawn.spawnCreep(getMaxAvailableCreep(spawn), "upgrader_" + Game.time, {memory: {role: "upgrader"}}); 
-    }
-    if (builderCreepsNumber < MAX_BUILDER) {
-       spawn.spawnCreep(getMaxAvailableCreep(spawn), "builder_" + Game.time, {memory: {role: "builder"}}); 
+    console.log("harvester: " + harvesterCreepsNumber);
+    console.log("upgrader: " + upgraderCreepsNumber);
+    console.log("builder: " + builderCreepsNumber);
+    if (harvesterCreepsNumber < MAX_HARVESTER ) {
+        console.log("try spawn harvester");
+       let ret = spawn.spawnCreep(getMaxAvailableCreep(spawn), "harvester_" + Game.time, {memory: {role: "harvester"}}); 
+       if(ret !== OK) {
+           console.log("failed at spawning: " + ret);
+       }
+    } else if (upgraderCreepsNumber < MAX_UPGRADER) {
+        console.log("try spawn upgrader");
+       let ret = spawn.spawnCreep(getMaxAvailableCreep(spawn), "upgrader_" + Game.time, {memory: {role: "upgrader"}});
+       if(ret !== OK) {
+           console.log("failed at spawning: " + ret);
+       }
+    } else if (builderCreepsNumber < MAX_BUILDER) {
+        console.log("try spawn builder");
+       let ret = spawn.spawnCreep(getMaxAvailableCreep(spawn), "builder_" + Game.time, {memory: {role: "builder"}}); 
+       if(ret !== OK) {
+           console.log("failed at spawning: " + ret);
+       }
     }
 }
 
