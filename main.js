@@ -215,44 +215,80 @@ function autoDefendExits(spawn) {
             let wallLineEnd;
             let middleCord;
             if (exitType === "top" || exitType === "bottom") {
-                 middleX = (currentExitInfo.size % 2 === 0 ? currentExitInfo.size / 2 : (currentExitInfo.size + 1) / 2) + currentExitInfo.start.x - 1;
-            } else if (exitType === "left" || exitType = "right") {
-                
+                middleX = (currentExitInfo.size % 2 === 0 ? currentExitInfo.size / 2 : (currentExitInfo.size + 1) / 2) + currentExitInfo.start.x - 1;
+                towerLeftOffsetX = -1;
+                towerRightOffsetX = 1;
+                fenceLeftX_1 = -2;
+                fenceLeftX_2 = -2;
+                fenceRightX_1 = 2;
+                fenceRightX_2 = 2;
+                wallLineStart = currentExitInfo.start.x - 2;
+                wallLineEnd = currentExitInfo.end.x + 3;
+                middleCord = middleX;
+            } else if (exitType === "left" || exitType === "right") {
+                middleY = (currentExitInfo.size % 2 === 0 ? currentExitInfo.size / 2 : (currentExitInfo.size + 1) / 2) + currentExitInfo.start.y - 1;
+                towerLeftOffsetY = -1;
+                towerRightOffsetY = 1;
+                fenceLeftY = -2;
+                fenceRightY = 2;
+                wallLineStart = currentExitInfo.start.y - 2;
+                wallLineEnd = currentExitInfo.end.y + 3;
+                middleCord = middleY;
             }
             if (exitType === "top") {
                 // top
                 middleY = (currentExitInfo.start.y) + 2;
-                towerLeftOffsetX = -1;
-                towerRightOffsetX = 1;
-                towerOffsetY = 1;
-                fenceLeftX = -2;
-                fenceY_1 = 1;
-                fenceY_2 = 2;
-                fenceRightX = 2;
-                wallLineStart = currentExitInfo.start.x - 2;
-                wallLineEnd = currentExitInfo.end.x + 3;
-                middleCord = middleX;
+                towerLeftOffsetY = 1;
+                towerRightOffsetY = 1;
+                fenceLeftY_1 = 1;
+                fenceLeftY_2 = 2;
+                fenceRightY_1 = 1;
+                fenceRightY_2 = 2;
             } else if (exitType === "bottom") {
                 middleY = (currentExitInfo.start.y) - 2;
+                towerLeftOffsetY = -1;
+                towerRightOffsetY = -1;
+                fenceLeftY_1 = -1;
+                fenceLeftY_2 = -2;
+                fenceRightY_1 = -1;
+                fenceRightY_2 = -2;
+            } else if (exitType === "left") {
+                middleX = (currentExitInfo.start.x) + 2;
+                towerLeftOffsetX = 1;
+                towerRightOffsetX = 1;
+                fenceLeftX_1 = 1;
+                fenceLeftX_2 = 2;
+                fenceRightX_1 = 1;
+                fenceRightX_2 = 2;
+            } else if (exitType === "right") {
+                middleX = (currentExitInfo.start.x) - 2;
+                towerLeftOffsetX = -1;
+                towerRightOffsetX = -1;
+                fenceLeftX_1 = -1;
+                fenceLeftX_2 = -2;
+                fenceRightX_1 = -1;
+                fenceRightX_2 = -2;
             }
             
+            console.log("exitType: " + exitType);
             // hardcoded fences left and right
-            spawn.room.getPositionAt(currentExitInfo.start.x + fenceLeftX, currentExitInfo.end.y + fenceY_1).createConstructionSite(STRUCTURE_WALL, "wall_" + Game.time);
-            spawn.room.getPositionAt(currentExitInfo.start.x + fenceLeftX, currentExitInfo.end.y + fenceY_2).createConstructionSite(STRUCTURE_WALL, "wall_" + Game.time);
+            spawn.room.getPositionAt(currentExitInfo.start.x + fenceLeftX_1, currentExitInfo.end.y + fenceLeftY_1).createConstructionSite(STRUCTURE_WALL, "wall_" + Game.time);
+            spawn.room.getPositionAt(currentExitInfo.start.x + fenceLeftX_2, currentExitInfo.end.y + fenceLeftY_2).createConstructionSite(STRUCTURE_WALL, "wall_" + Game.time);
             
-            spawn.room.getPositionAt(currentExitInfo.end.x + fenceRightX, currentExitInfo.end.y + fenceY_1).createConstructionSite(STRUCTURE_WALL, "wall_" + Game.time);
-            spawn.room.getPositionAt(currentExitInfo.end.x + fenceRightX, currentExitInfo.end.y + fenceY_2).createConstructionSite(STRUCTURE_WALL, "wall_" + Game.time);
+            spawn.room.getPositionAt(currentExitInfo.end.x + fenceRightX_1, currentExitInfo.end.y + fenceRightY_1).createConstructionSite(STRUCTURE_WALL, "wall_" + Game.time);
+            spawn.room.getPositionAt(currentExitInfo.end.x + fenceRightX_2, currentExitInfo.end.y + fenceRightY_2).createConstructionSite(STRUCTURE_WALL, "wall_" + Game.time);
             
             // towers
-            spawn.room.getPositionAt(middleX + towerLeftOffsetX, middleY + towerOffsetY).createConstructionSite(STRUCTURE_TOWER, "tower_" + Game.time);
-            spawn.room.getPositionAt(middleX + towerRightOffsetX, middleY + towerOffsetY).createConstructionSite(STRUCTURE_TOWER, "tower_" + Game.time);
+            //console.log("get pos at:" + (middleX + towerLeftOffsetX) + "/" + (middleY + towerOffsetY));
+            spawn.room.getPositionAt(middleX + towerLeftOffsetX, middleY + towerLeftOffsetY).createConstructionSite(STRUCTURE_TOWER, "tower_" + Game.time);
+            spawn.room.getPositionAt(middleX + towerRightOffsetX, middleY + towerRightOffsetY).createConstructionSite(STRUCTURE_TOWER, "tower_" + Game.time);
             
             // ramparts
             spawn.room.getPositionAt(middleX, middleY).createConstructionSite(STRUCTURE_RAMPART, "rampart_" + Game.time);
             
             // +1 to left and right to cover diagonal moving
             for(let curr = wallLineStart; curr < wallLineEnd; curr++) {
-                if(curr === middleX) {
+                if(curr === middleCord) {
                     continue;
                 }
                 let buildpos;
