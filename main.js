@@ -192,39 +192,78 @@ function parseAllExits(spawn) {
 }
 
 function autoDefendExits(spawn) {
-    let exitType = "top";
     let exitList = spawn.room.memory.exit_list;
     
-    for(let index in exitList.top) {
-        let currentExitInfo = exitList.top[index];
-        // build walls except middle part 
-        let middleX = (currentExitInfo.size % 2 === 0 ? currentExitInfo.size / 2 : (currentExitInfo.size + 1) / 2) + currentExitInfo.start.x - 1;
-        let middleY = (currentExitInfo.start.y) + 2;
-        
-        // hardcoded fences left and right
-        spawn.room.getPositionAt(currentExitInfo.start.x - 2, currentExitInfo.end.y + 1).createConstructionSite(STRUCTURE_WALL, "wall_" + Game.time);
-        spawn.room.getPositionAt(currentExitInfo.start.x - 2, currentExitInfo.end.y + 2).createConstructionSite(STRUCTURE_WALL, "wall_" + Game.time);
-        
-        spawn.room.getPositionAt(currentExitInfo.end.x + 2, currentExitInfo.end.y + 1).createConstructionSite(STRUCTURE_WALL, "wall_" + Game.time);
-        spawn.room.getPositionAt(currentExitInfo.end.x + 2, currentExitInfo.end.y + 2).createConstructionSite(STRUCTURE_WALL, "wall_" + Game.time);
-        
-        // towers
-        //console.log("tower at " + (middleX - 1) + "/" + (middleY+1));
-        //console.log("tower at " + (middleX + 1) + "/" + (middleY+1));
-        spawn.room.getPositionAt(middleX - 1, middleY + 1).createConstructionSite(STRUCTURE_TOWER, "tower_" + Game.time);
-        spawn.room.getPositionAt(middleX + 1, middleY + 1).createConstructionSite(STRUCTURE_TOWER, "tower_" + Game.time);
-        
-        // ramparts
-        spawn.room.getPositionAt(middleX, middleY).createConstructionSite(STRUCTURE_RAMPART, "rampart_" + Game.time);
-        
-        // +1 to left and right to cover diagonal moving
-        for(let curr_x = currentExitInfo.start.x - 2; curr_x < currentExitInfo.end.x + 3; curr_x++) {
-            if(curr_x === middleX) {
-                continue;
+    let exitTypes = ["top", "bottom", "left", "right"];
+    
+    for(let exitType of exitTypes) {
+        let currExitList = exitList[exitType];
+        for(let index in currExitList) {
+            let currentExitInfo = currExitList[index];
+            // build walls except middle part 
+            // top
+            let middleX;
+            let middleY;
+            let towerLeftOffsetX;
+            let towerRightOffsetX;
+            let towerOffsetY;
+            let fenceLeftX;
+            let fenceY_1;
+            let fenceY_2;
+            let fenceRightX;
+            let wallLineStart;
+            let wallLineEnd;
+            let middleCord;
+            if (exitType === "top" || exitType === "bottom") {
+                 middleX = (currentExitInfo.size % 2 === 0 ? currentExitInfo.size / 2 : (currentExitInfo.size + 1) / 2) + currentExitInfo.start.x - 1;
+            } else if (exitType === "left" || exitType = "right") {
+                
             }
-            let buildPos = spawn.room.getPositionAt(curr_x, middleY);
-            //console.log("create wall at " + buildPos.x + "/" + buildPos.y);
-            buildPos.createConstructionSite(STRUCTURE_WALL, "wall_" + Game.time);
+            if (exitType === "top") {
+                // top
+                middleY = (currentExitInfo.start.y) + 2;
+                towerLeftOffsetX = -1;
+                towerRightOffsetX = 1;
+                towerOffsetY = 1;
+                fenceLeftX = -2;
+                fenceY_1 = 1;
+                fenceY_2 = 2;
+                fenceRightX = 2;
+                wallLineStart = currentExitInfo.start.x - 2;
+                wallLineEnd = currentExitInfo.end.x + 3;
+                middleCord = middleX;
+            } else if (exitType === "bottom") {
+                middleY = (currentExitInfo.start.y) - 2;
+            }
+            
+            // hardcoded fences left and right
+            spawn.room.getPositionAt(currentExitInfo.start.x + fenceLeftX, currentExitInfo.end.y + fenceY_1).createConstructionSite(STRUCTURE_WALL, "wall_" + Game.time);
+            spawn.room.getPositionAt(currentExitInfo.start.x + fenceLeftX, currentExitInfo.end.y + fenceY_2).createConstructionSite(STRUCTURE_WALL, "wall_" + Game.time);
+            
+            spawn.room.getPositionAt(currentExitInfo.end.x + fenceRightX, currentExitInfo.end.y + fenceY_1).createConstructionSite(STRUCTURE_WALL, "wall_" + Game.time);
+            spawn.room.getPositionAt(currentExitInfo.end.x + fenceRightX, currentExitInfo.end.y + fenceY_2).createConstructionSite(STRUCTURE_WALL, "wall_" + Game.time);
+            
+            // towers
+            spawn.room.getPositionAt(middleX + towerLeftOffsetX, middleY + towerOffsetY).createConstructionSite(STRUCTURE_TOWER, "tower_" + Game.time);
+            spawn.room.getPositionAt(middleX + towerRightOffsetX, middleY + towerOffsetY).createConstructionSite(STRUCTURE_TOWER, "tower_" + Game.time);
+            
+            // ramparts
+            spawn.room.getPositionAt(middleX, middleY).createConstructionSite(STRUCTURE_RAMPART, "rampart_" + Game.time);
+            
+            // +1 to left and right to cover diagonal moving
+            for(let curr = wallLineStart; curr < wallLineEnd; curr++) {
+                if(curr === middleX) {
+                    continue;
+                }
+                let buildpos;
+                if (exitType === "top" || exitType === "bottom") {
+                    buildPos = spawn.room.getPositionAt(curr, middleY);
+                } else if(exitType === "left" || exitType === "right") {
+                    buildPos = spawn.room.getPositionAt(middleX, curr)
+                }
+                
+                buildPos.createConstructionSite(STRUCTURE_WALL, "wall_" + Game.time);
+            }
         }
     }
 }
