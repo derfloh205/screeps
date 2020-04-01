@@ -55,26 +55,26 @@ function autoSpawnCreeps(spawn) {
     let harvesterCreepsNumber = _.filter(Game.creeps, (creep) => creep.memory.role === "harvester").length;
     let upgraderCreepsNumber = _.filter(Game.creeps, (creep) => creep.memory.role === "upgrader").length;
     let builderCreepsNumber = _.filter(Game.creeps, (creep) => creep.memory.role === "builder").length;
-    console.log("harvester: " + harvesterCreepsNumber);
-    console.log("upgrader: " + upgraderCreepsNumber);
-    console.log("builder: " + builderCreepsNumber);
+    //console.log("harvester: " + harvesterCreepsNumber);
+    //console.log("upgrader: " + upgraderCreepsNumber);
+    //console.log("builder: " + builderCreepsNumber);
     if (harvesterCreepsNumber < MAX_HARVESTER ) {
-        console.log("try spawn harvester");
+        //console.log("try spawn harvester");
        let ret = spawn.spawnCreep(getMaxAvailableCreep(spawn), "harvester_" + Game.time, {memory: {role: "harvester"}}); 
        if(ret !== OK) {
-           console.log("failed at spawning: " + ret);
+           //console.log("failed at spawning: " + ret);
        }
     } else if (upgraderCreepsNumber < MAX_UPGRADER) {
-        console.log("try spawn upgrader");
+        //console.log("try spawn upgrader");
        let ret = spawn.spawnCreep(getMaxAvailableCreep(spawn), "upgrader_" + Game.time, {memory: {role: "upgrader"}});
        if(ret !== OK) {
-           console.log("failed at spawning: " + ret);
+           //console.log("failed at spawning: " + ret);
        }
     } else if (builderCreepsNumber < MAX_BUILDER) {
-        console.log("try spawn builder");
+        //console.log("try spawn builder");
        let ret = spawn.spawnCreep(getMaxAvailableCreep(spawn), "builder_" + Game.time, {memory: {role: "builder"}}); 
        if(ret !== OK) {
-           console.log("failed at spawning: " + ret);
+          // console.log("failed at spawning: " + ret);
        }
     }
 }
@@ -212,7 +212,10 @@ function autoDefendExits(spawn) {
         //console.log("tower at " + (middleX - 1) + "/" + (middleY+1));
         //console.log("tower at " + (middleX + 1) + "/" + (middleY+1));
         spawn.room.getPositionAt(middleX - 1, middleY + 1).createConstructionSite(STRUCTURE_TOWER, "tower_" + Game.time);
-        spawn.room.getPositionAt(middleX + 1, middleX + 1).createConstructionSite(STRUCTURE_TOWER, "tower_" + Game.time);
+        spawn.room.getPositionAt(middleX + 1, middleY + 1).createConstructionSite(STRUCTURE_TOWER, "tower_" + Game.time);
+        
+        // ramparts
+        spawn.room.getPositionAt(middleX, middleY).createConstructionSite(STRUCTURE_RAMPART, "rampart_" + Game.time);
         
         // +1 to left and right to cover diagonal moving
         for(let curr_x = currentExitInfo.start.x - 2; curr_x < currentExitInfo.end.x + 3; curr_x++) {
